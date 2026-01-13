@@ -1,2 +1,3 @@
-
+import joblib
+vectorizer = joblib.load('vectorizer.jb')
   

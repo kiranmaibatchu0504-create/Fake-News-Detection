@@ -4,7 +4,7 @@ import joblib
 import os
 
 # Define paths
-current_dir = os.path.dirname(os.path.abspath(__file__))
+current_dir = os.getcwd()
 vectorizer_path = os.path.join(current_dir, 'vectorizer.jb')
 model_path = os.path.join(current_dir, 'lr_model.jb')
 

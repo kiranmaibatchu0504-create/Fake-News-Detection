@@ -1,23 +1,41 @@
-# Fake-News-Detection
 import streamlit as st
 import joblib
+import os
 
-vectorizer = joblib.load("vectorizer.jb")
-model = joblib.load("lr_model.jb")
+# Define the path to your vectorizer file
+VECTORIZER_PATH = "vectorizer.jb"  # Update this path if necessary
 
-st.title("Fake News Detector")
-st.write("Enter a News Article below to check whether it is Fake or Real. ")
+# Load the vectorizer with error handling using st.cache_data
+@st.cache_data
+def load_vectorizer():
+    if not os.path.exists(VECTORIZER_PATH):
+        st.error(f"Vectorizer file not found at '{VECTORIZER_PATH}'. Please upload or place it in the correct directory.")
+        return None
+    try:
+        return joblib.load(VECTORIZER_PATH)
+    except Exception as e:
+        st.error(f"Error loading vectorizer: {e}")
+        return None
 
-inputn = st.text_area("News Article:","")
+vectorizer = load_vectorizer()
 
-if st.button("Check News"):
-    if inputn.strip():
-        transform_input = vectorizer.transform([inputn])
-        prediction = model.predict(transform_input)
+# Your app logic here
+def main():
+    st.title("Fake News Detection")
+    
+    if vectorizer is None:
+        st.stop()
+    
+    user_input = st.text_area("Enter news text to analyze:")
+    
+    if st.button("Analyze"):
+        # Example: convert text to features
+        features = vectorizer.transform([user_input])
+        # Your prediction code here
+        # For example:
+        # prediction = model.predict(features)
+        # st.write(f"Prediction: {prediction}")
+        st.write("This is where your prediction result will appear.")
 
-        if prediction[0] == 1:
-            st.success("The News is Real! ")
-        else:
-            st.error("The News is Fake! ")
-    else:
-        st.warning("Please enter some text to Analyze") 
+if __name__ == "__main__":
+    main()
